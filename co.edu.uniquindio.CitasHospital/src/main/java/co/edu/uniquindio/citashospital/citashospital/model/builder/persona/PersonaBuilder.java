@@ -1,6 +1,6 @@
-package co.edu.uniquindio.citashospital.citashospital.model.builder;
+package co.edu.uniquindio.citashospital.citashospital.model.builder.persona;
 
-import co.edu.uniquindio.citashospital.citashospital.model.Persona;
+import co.edu.uniquindio.citashospital.citashospital.model.Persona.Persona;
 
 public class PersonaBuilder <T extends PersonaBuilder>{
 

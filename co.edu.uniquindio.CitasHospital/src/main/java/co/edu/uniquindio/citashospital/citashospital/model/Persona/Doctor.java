@@ -1,6 +1,7 @@
-package co.edu.uniquindio.citashospital.citashospital.model;
+package co.edu.uniquindio.citashospital.citashospital.model.Persona;
 
-import co.edu.uniquindio.citashospital.citashospital.model.builder.DoctorBuilder;
+import co.edu.uniquindio.citashospital.citashospital.model.Persona.Persona;
+import co.edu.uniquindio.citashospital.citashospital.model.builder.persona.DoctorBuilder;
 
 public class Doctor extends Persona {
     public Doctor(String cedula, String nombre, String apellido) {
