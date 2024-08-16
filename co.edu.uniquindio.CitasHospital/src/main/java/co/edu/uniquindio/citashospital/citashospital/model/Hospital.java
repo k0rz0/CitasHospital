@@ -38,8 +38,8 @@ public class Hospital {
         return null;
     }
     public boolean agregarPersona(Persona nuevaPersona) {
-        Persona productoEncontrado = obtenerPersonaPorCedula(nuevaPersona.getCedula());
-        if (productoEncontrado == null) {
+        Persona personaEncontrado = obtenerPersonaPorCedula(nuevaPersona.getCedula());
+        if (personaEncontrado == null) {
             String tipoPersona = nuevaPersona.getClass().getSimpleName();
             if (!personasPorTipo.containsKey(tipoPersona)) {
                 personasPorTipo.put(tipoPersona, new ArrayList<>());

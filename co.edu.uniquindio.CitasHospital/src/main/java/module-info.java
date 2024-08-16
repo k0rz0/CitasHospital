@@ -1,6 +1,7 @@
 module co.edu.uniquindio.citashospital.citashospital {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.mapstruct;
 
 
     opens co.edu.uniquindio.citashospital.citashospital to javafx.fxml;
