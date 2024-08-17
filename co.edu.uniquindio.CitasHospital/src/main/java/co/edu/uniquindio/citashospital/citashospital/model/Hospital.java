@@ -1,12 +1,11 @@
 package co.edu.uniquindio.citashospital.citashospital.model;
 
+import co.edu.uniquindio.citashospital.citashospital.model.Persona.Doctor;
+import co.edu.uniquindio.citashospital.citashospital.model.Persona.Paciente;
 import co.edu.uniquindio.citashospital.citashospital.model.Persona.Persona;
 import co.edu.uniquindio.citashospital.citashospital.model.builder.HospitalBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Hospital {
 
@@ -55,6 +54,29 @@ public class Hospital {
         return citas;
     }
 
+    public  List<Persona> obtenerPersonasPorTipo(String tipoPersona) {
+        return personasPorTipo.getOrDefault(tipoPersona,new ArrayList<>());
+    }
+    public  List<Doctor> obtenerDoctores(){
+        List<Persona> personas = obtenerPersonasPorTipo("Doctor");
+        List<Doctor> doctors = new ArrayList<>();
+        for (Persona persona : personas) {
+            if (persona instanceof Doctor) {
+                doctors.add((Doctor) persona);
+            }
+        }
+        return doctors;
+    }
+    public  List<Paciente> obtenerPacientes(){
+        List<Persona> personas = obtenerPersonasPorTipo("Paciente");
+        List<Paciente> pacientes = new ArrayList<>();
+        for (Persona persona : personas) {
+            if (persona instanceof Paciente) {
+                pacientes.add((Paciente) persona);
+            }
+        }
+        return pacientes;
+    }
     public void setCitas(ArrayList<Cita> citas) {
         this.citas = citas;
     }
