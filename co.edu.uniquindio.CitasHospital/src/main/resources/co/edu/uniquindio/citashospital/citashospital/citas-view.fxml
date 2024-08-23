@@ -73,7 +73,7 @@
                <StackPane.margin>
                   <Insets bottom="6.0" left="5.0" />
                </StackPane.margin></Button>
-            <Button mnemonicParsing="false" text="Button" StackPane.alignment="CENTER_RIGHT">
+            <Button mnemonicParsing="false" onAction="#onCleanSearch" text="Button" StackPane.alignment="CENTER_RIGHT">
                <styleClass>
                   <String fx:value="clean-btn" />
                   <String fx:value="btn-textField" />

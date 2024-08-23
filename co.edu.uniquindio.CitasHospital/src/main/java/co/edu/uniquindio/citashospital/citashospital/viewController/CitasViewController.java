@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class CitasViewController {
     CitaController citaController;
@@ -92,7 +93,6 @@ public class CitasViewController {
         List<DoctorDTO> listDoctor = citaController.obtenerDoctores();
         cbDoctores.addAll("--Seleccione--");
         for (DoctorDTO doctor:listDoctor){
-            System.out.println(doctor);
             cbDoctores.add(doctor.doctorCedula());
         }
         cbDoctor.setItems(cbDoctores);
@@ -119,17 +119,25 @@ public class CitasViewController {
                 if (citaController.agregarCita(citaDTO)){
                     obtenerCita();
                     limpiarCamposCita();
+                    mostrarMensaje("Notificación cita", "Cita creada", "La cita se ha creado con éxito", Alert.AlertType.INFORMATION);
                 }else {
                     // Manejar caso donde no se pudo agregar la cita
-                    System.out.println("No se pudo agregar la cita.");
+                    mostrarMensaje("Notificación cita", "Cita no creado", "La cita no se ha creado con éxito", Alert.AlertType.ERROR);
                 }
             } else {
-                System.out.println("Los datos ingresados no son válidos.");
+                mostrarMensaje("Notificación cita", "Cita no creado", "Los datos ingresados son invalidos", Alert.AlertType.ERROR);
             }
         }  catch (Exception e) {
         // Manejar cualquier excepción inesperada
             System.out.println("Ocurrió un error al intentar agregar la cita: " + e.getMessage());
         }
+    }
+    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
+        Alert aler = new Alert(alertType);
+        aler.setTitle(titulo);
+        aler.setHeaderText(header);
+        aler.setContentText(contenido);
+        aler.showAndWait();
     }
 
 
@@ -147,6 +155,10 @@ public class CitasViewController {
 
     private CitaDTO contruirCitaDTO() {
         return new CitaDTO(0,cbDoctor.getValue(),cbPaciente.getValue(), Date.from(dateCita.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    }
+    @FXML
+    void onCleanSearch(ActionEvent event) {
+        txtBuscarCita.setText("");
     }
 
     @FXML
