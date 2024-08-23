@@ -1,6 +1,5 @@
 package co.edu.uniquindio.citashospital.citashospital.model.Persona;
 
-import co.edu.uniquindio.citashospital.citashospital.model.builder.persona.PersonaBuilder;
 
 public class Persona {
 
@@ -14,7 +13,20 @@ public class Persona {
         this.apellido = apellido;
     }
 
-    public static PersonaBuilder builder() {return new PersonaBuilder();}
+    public Persona() {
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
 
     public String getCedula() {
         return cedula;

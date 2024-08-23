@@ -1,6 +1,5 @@
 package co.edu.uniquindio.citashospital.citashospital.model.Persona;
 
-import co.edu.uniquindio.citashospital.citashospital.model.builder.persona.PacienteBuilder;
 
 public class Paciente extends Persona {
 
@@ -11,8 +10,14 @@ public class Paciente extends Persona {
         this.eps = eps;
     }
 
-    public static PacienteBuilder builder() {
-        return new PacienteBuilder();
+    public Paciente() {
     }
 
+    public String getEps() {
+        return eps;
+    }
+
+    public void setEps(String eps) {
+        this.eps = eps;
+    }
 }

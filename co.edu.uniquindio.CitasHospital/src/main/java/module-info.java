@@ -13,4 +13,9 @@ module co.edu.uniquindio.citashospital.citashospital {
     opens co.edu.uniquindio.citashospital.citashospital.model;
     exports co.edu.uniquindio.citashospital.citashospital.model;
 
+    opens co.edu.uniquindio.citashospital.citashospital.controller;
+    exports co.edu.uniquindio.citashospital.citashospital.controller;
+
+    exports co.edu.uniquindio.citashospital.citashospital.mapping.dto;
+    exports co.edu.uniquindio.citashospital.citashospital.mapping.mappers;
 }

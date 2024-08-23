@@ -9,22 +9,37 @@ import java.util.Date;
 public class Cita {
     private static int contador;
     private int idCita;
-    private Doctor doctorAsignado;
-    private Paciente pacienteAsignado;
+    private String doctorAsignado;
+    private String pacienteAsignado;
     private Date fechaCita;
 
-    public Cita(Doctor doctorAsignado, Paciente pacienteAsignado, Date fechaCita) {
-        this.idCita = contador++;
+    public Cita(String doctorAsignado, String pacienteAsignado, Date fechaCita) {
         this.doctorAsignado = doctorAsignado;
         this.pacienteAsignado = pacienteAsignado;
         this.fechaCita = fechaCita;
     }
 
-    public Doctor getDoctorAsignado() {
+    public void setDoctorAsignado(String doctorAsignado) {
+        this.doctorAsignado = doctorAsignado;
+    }
+
+    public void setPacienteAsignado(String pacienteAsignado) {
+        this.pacienteAsignado = pacienteAsignado;
+    }
+
+    public void setFechaCita(Date fechaCita) {
+        this.fechaCita = fechaCita;
+    }
+
+    public Cita(){
+        this.idCita = ++contador;
+    }
+
+    public String getDoctorAsignado() {
         return doctorAsignado;
     }
 
-    public Paciente getPacienteAsignado() {
+    public String getPacienteAsignado() {
         return pacienteAsignado;
     }
 
@@ -34,5 +49,15 @@ public class Cita {
 
     public int getIdCita() {
         return idCita;
+    }
+
+    @Override
+    public String toString() {
+        return "Cita{" +
+                "idCita=" + idCita +
+                ", doctorAsignado='" + doctorAsignado + '\'' +
+                ", pacienteAsignado='" + pacienteAsignado + '\'' +
+                ", fechaCita=" + fechaCita +
+                '}';
     }
 }

@@ -1,5 +1,8 @@
 package co.edu.uniquindio.citashospital.citashospital.viewController;
 import co.edu.uniquindio.citashospital.citashospital.controller.CitaController;
+import co.edu.uniquindio.citashospital.citashospital.mapping.dto.CitaDTO;
+import co.edu.uniquindio.citashospital.citashospital.mapping.dto.DoctorDTO;
+import co.edu.uniquindio.citashospital.citashospital.mapping.dto.PacienteDTO;
 import co.edu.uniquindio.citashospital.citashospital.model.Cita;
 import co.edu.uniquindio.citashospital.citashospital.model.Persona.Doctor;
 import co.edu.uniquindio.citashospital.citashospital.model.Persona.Paciente;
@@ -15,12 +18,13 @@ import javafx.scene.control.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 public class CitasViewController {
     CitaController citaController;
-    Cita citaSeleccionado;
-    ObservableList<Cita> listCita = FXCollections.observableArrayList();
+    CitaDTO citaSeleccionado;
+    ObservableList<CitaDTO> listCita = FXCollections.observableArrayList();
     private boolean isUpdatingList = false;
 
     @FXML
@@ -31,7 +35,6 @@ public class CitasViewController {
         initSearch();
     }
     private void initTable() {
-
         initDataBinding();
         obtenerCita();
         tableCita.getItems().clear();
@@ -39,29 +42,27 @@ public class CitasViewController {
         listenerSelection();
     }
     private void initDataBinding() {
-        colDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaCita().toString()));
-        colDoctor.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDoctorAsignado().getCedula()));
-        colPaciente.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPacienteAsignado().getCedula()));
-        colCodigoCita.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getIdCita())));
+        colDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().citaFecha().toString()));
+        colDoctor.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().citaDoctor()));
+        colPaciente.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().citaPaciente()));
+        colCodigoCita.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().citaId())));
     }
     private void initSearch(){
 
-        FilteredList<Cita> filteredData = new FilteredList<>(listCita, b->true);
+        FilteredList<CitaDTO> filteredData = new FilteredList<>(listCita, b->true);
         txtBuscarCita.textProperty().addListener((ObservableList,oldValue,newValue)->{
             filteredData.setPredicate(citaSeleccionado ->{
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
                 String loweCaseFilter = newValue.toLowerCase();
-                if (String.valueOf(citaSeleccionado.getIdCita()).toLowerCase().contains(loweCaseFilter)) {
-                    return true;
-                } else if (citaSeleccionado.getDoctorAsignado().getCedula().toLowerCase().contains(loweCaseFilter)){
+                if (citaSeleccionado.citaDoctor().toLowerCase().contains(loweCaseFilter)){
                     return true;
                 }
-                return citaSeleccionado.getPacienteAsignado().getCedula().toLowerCase().contains(loweCaseFilter);
+                return citaSeleccionado.citaPaciente().toLowerCase().contains(loweCaseFilter);
             });
         });
-        SortedList<Cita> sortedData = new SortedList<>(filteredData);
+        SortedList<CitaDTO> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tableCita.comparatorProperty());
         tableCita.setItems(sortedData);
     }
@@ -75,52 +76,90 @@ public class CitasViewController {
             mostrarInformacionCita(citaSeleccionado);
         });
     }
-    private void mostrarInformacionCita(Cita citaSeleccionada) {
+    private void mostrarInformacionCita(CitaDTO citaSeleccionada) {
         if(citaSeleccionada != null){
-            cbDoctor.getSelectionModel().select(citaSeleccionada.getDoctorAsignado().getCedula());
-            cbPaciente.getSelectionModel().select(citaSeleccionada.getDoctorAsignado().getCedula());
-            dateCita.setValue(citaSeleccionada.getFechaCita().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            cbDoctor.getSelectionModel().select(citaSeleccionada.citaDoctor());
+            cbPaciente.getSelectionModel().select(citaSeleccionada.citaPaciente());
+            dateCita.setValue(citaSeleccionada.citaFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
     }
     private void initCombo() {
         initCbDoctor();
         initCbPaciente();
-
     }
     private void  initCbDoctor(){
         ObservableList<String> cbDoctores = FXCollections.observableArrayList();
-        List<Doctor> listDoctor = citaController.obtenerDoctores();
+        List<DoctorDTO> listDoctor = citaController.obtenerDoctores();
         cbDoctores.addAll("--Seleccione--");
-        for (Doctor doctor:listDoctor){
-            cbDoctores.add(doctor.getCedula());
+        for (DoctorDTO doctor:listDoctor){
+            System.out.println(doctor);
+            cbDoctores.add(doctor.doctorCedula());
         }
         cbDoctor.setItems(cbDoctores);
         cbDoctor.getSelectionModel().select("--Seleccione--");
     }
     private void  initCbPaciente(){
         ObservableList<String> itemscbPacientes = FXCollections.observableArrayList();
-        List<Paciente> listPacientes = citaController.obtenerPacientes();
+        List<PacienteDTO> listPacientes = citaController.obtenerPacientes();
         itemscbPacientes.addAll("--Seleccione--");
-        for (Paciente paciente:listPacientes){
-            itemscbPacientes.add(paciente.getCedula());
+        for (PacienteDTO paciente:listPacientes){
+            itemscbPacientes.add(paciente.pacienteCedula());
         }
         cbPaciente.setItems(itemscbPacientes);
-        cbDoctor.getSelectionModel().select("--Seleccione--");
+        cbPaciente.getSelectionModel().select("--Seleccione--");
+    }
+    @FXML
+    void onAddCita(ActionEvent event) {
+        agregarCitaDTO();
+    }
+    private void agregarCitaDTO(){
+        try {
+            if (datosValidos()){
+                CitaDTO citaDTO = contruirCitaDTO();
+                if (citaController.agregarCita(citaDTO)){
+                    obtenerCita();
+                    limpiarCamposCita();
+                }else {
+                    // Manejar caso donde no se pudo agregar la cita
+                    System.out.println("No se pudo agregar la cita.");
+                }
+            } else {
+                System.out.println("Los datos ingresados no son válidos.");
+            }
+        }  catch (Exception e) {
+        // Manejar cualquier excepción inesperada
+            System.out.println("Ocurrió un error al intentar agregar la cita: " + e.getMessage());
+        }
     }
 
 
+    private void limpiarCamposCita() {
+        cbDoctor.getSelectionModel().select("--Seleccione--");
+        cbPaciente.getSelectionModel().select("--Seleccione--");
+        dateCita.setValue(null);
+    }
+
+    private boolean datosValidos() {
+        return !cbDoctor.getValue().equalsIgnoreCase("--Seleccione--")
+                && !cbDoctor.getValue().equalsIgnoreCase("--Seleccione--")
+                &&  dateCita.getValue() != null;
+    }
+
+    private CitaDTO contruirCitaDTO() {
+        return new CitaDTO(0,cbDoctor.getValue(),cbPaciente.getValue(), Date.from(dateCita.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    }
 
     @FXML
-    private TableColumn<Cita, String> colCodigoCita;
+    private TableColumn<CitaDTO, String> colCodigoCita;
 
     @FXML
-    private TableColumn<Cita, String> colDate;
+    private TableColumn<CitaDTO, String> colDate;
 
     @FXML
-    private TableColumn<Cita, String> colDoctor;
+    private TableColumn<CitaDTO, String> colDoctor;
 
     @FXML
-    private TableColumn<Cita, String> colPaciente;
+    private TableColumn<CitaDTO, String> colPaciente;
 
     @FXML
     private DatePicker dateCita;
@@ -132,13 +171,11 @@ public class CitasViewController {
     private ComboBox<String> cbPaciente;
 
     @FXML
-    private TableView<Cita> tableCita;
+    private TableView<CitaDTO> tableCita;
 
     @FXML
     private TextField txtBuscarCita;
 
-    @FXML
-    void onAddCita(ActionEvent event) {
-    }
+
 
 }

@@ -3,7 +3,6 @@ package co.edu.uniquindio.citashospital.citashospital.model;
 import co.edu.uniquindio.citashospital.citashospital.model.Persona.Doctor;
 import co.edu.uniquindio.citashospital.citashospital.model.Persona.Paciente;
 import co.edu.uniquindio.citashospital.citashospital.model.Persona.Persona;
-import co.edu.uniquindio.citashospital.citashospital.model.builder.HospitalBuilder;
 
 import java.util.*;
 
@@ -13,17 +12,24 @@ public class Hospital {
 
     private Map<String, List<Persona>> personasPorTipo;// Este funciona para almacenar todas la personas en una sola lista en una matriz
 //    ArrayList<Paciente> pacientes = new ArrayList<>();
-//    ArrayList<Doctor> doctores = new ArrayList<>();
+    private ArrayList<Doctor> doctores = new ArrayList<>();
     ArrayList<Cita> citas = new ArrayList<>();
 
     //Constructor
     public Hospital(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Hospital() {
         personasPorTipo = new HashMap<>();
     }
-    //Builder
-    public static HospitalBuilder builder(){
-        return new HospitalBuilder();
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public Persona obtenerPersonaPorCedula(String cedulaPersona) {
@@ -57,7 +63,7 @@ public class Hospital {
     public  List<Persona> obtenerPersonasPorTipo(String tipoPersona) {
         return personasPorTipo.getOrDefault(tipoPersona,new ArrayList<>());
     }
-    public  List<Doctor> obtenerDoctores(){
+    public List<Doctor> obtenerDoctores(){
         List<Persona> personas = obtenerPersonasPorTipo("Doctor");
         List<Doctor> doctors = new ArrayList<>();
         for (Persona persona : personas) {
@@ -67,6 +73,8 @@ public class Hospital {
         }
         return doctors;
     }
+
+
     public  List<Paciente> obtenerPacientes(){
         List<Persona> personas = obtenerPersonasPorTipo("Paciente");
         List<Paciente> pacientes = new ArrayList<>();
@@ -77,7 +85,14 @@ public class Hospital {
         }
         return pacientes;
     }
-    public void setCitas(ArrayList<Cita> citas) {
-        this.citas = citas;
+    public void agregarCita(Cita cita){
+        citas.add(cita);
+    }
+
+    public boolean verificarCitaExistente(String doctorAsignado, String pacienteAsignado, Date fechaCita) {
+        return citas.stream().anyMatch(c ->
+                c.getDoctorAsignado().equals(doctorAsignado) &&
+                        c.getPacienteAsignado().equals(pacienteAsignado) &&
+                        c.getFechaCita().equals(fechaCita));
     }
 }
