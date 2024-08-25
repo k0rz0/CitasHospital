@@ -93,7 +93,7 @@ public class CitasViewController {
         List<DoctorDTO> listDoctor = citaController.obtenerDoctores();
         cbDoctores.addAll("--Seleccione--");
         for (DoctorDTO doctor:listDoctor){
-            cbDoctores.add(doctor.doctorCedula());
+            cbDoctores.add(doctor.doctorNombre());
         }
         cbDoctor.setItems(cbDoctores);
         cbDoctor.getSelectionModel().select("--Seleccione--");
@@ -103,7 +103,7 @@ public class CitasViewController {
         List<PacienteDTO> listPacientes = citaController.obtenerPacientes();
         itemscbPacientes.addAll("--Seleccione--");
         for (PacienteDTO paciente:listPacientes){
-            itemscbPacientes.add(paciente.pacienteCedula());
+            itemscbPacientes.add(paciente.pacienteNombre());
         }
         cbPaciente.setItems(itemscbPacientes);
         cbPaciente.getSelectionModel().select("--Seleccione--");
@@ -149,7 +149,7 @@ public class CitasViewController {
 
     private boolean datosValidos() {
         return !cbDoctor.getValue().equalsIgnoreCase("--Seleccione--")
-                && !cbDoctor.getValue().equalsIgnoreCase("--Seleccione--")
+                && !cbPaciente.getValue().equalsIgnoreCase("--Seleccione--")
                 &&  dateCita.getValue() != null;
     }
 
